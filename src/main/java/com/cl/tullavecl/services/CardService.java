@@ -4,27 +4,36 @@ import com.cl.tullavecl.Dtos.CardBalanceDto;
 import com.cl.tullavecl.Dtos.CardInformationDto;
 import com.cl.tullavecl.Dtos.ResponseCardDto;
 import com.cl.tullavecl.Dtos.ResponseDto;
+import com.cl.tullavecl.entities.CardInformation;
+import com.cl.tullavecl.repositories.CardInformationRepository;
 import com.cl.tullavecl.utils.PropertiesConnection;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Service
 public class CardService {
 
     private final RestTemplate restTemplate;
 
+    @Autowired
+    private CardInformationRepository cardInformationRepository;
+
     public CardService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseDto getCardInformation(String cardNumber) throws IOException {
+    public ResponseDto getCardInformation(String cardNumber, HttpServletRequest request) throws IOException {
+        CardInformation cardInformation = new CardInformation();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(new PropertiesConnection().get("bearer.token"));
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -34,6 +43,7 @@ public class CardService {
         try {
             response = restTemplate.exchange(url, HttpMethod.GET, entity, CardInformationDto.class);
         } catch (HttpClientErrorException ex) {
+
             if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
                 CardBalanceDto cardBalance = getCardBalance(cardNumber);
                 ResponseCardDto responseCardDto = new ResponseCardDto();
@@ -44,6 +54,9 @@ public class CardService {
                 ResponseDto responseDto = new ResponseDto();
                 responseDto.setData(responseCardDto);
                 responseDto.setMessage("Balance");
+
+                saveCardInformation(cardNumber, request, cardInformation);
+
                 return responseDto;
             } else if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
                 ResponseDto responseDto = getResponseError(ex);
@@ -64,7 +77,17 @@ public class CardService {
         ResponseDto responseDto = new ResponseDto();
         responseDto.setData(responseCardDto);
         responseDto.setMessage("Balance");
+
+        saveCardInformation(cardNumber, request, cardInformation);
+
         return responseDto;
+    }
+
+    private void saveCardInformation(String cardNumber, HttpServletRequest request, CardInformation cardInformation) {
+        cardInformation.setIpClient(request.getRemoteAddr());
+        cardInformation.setCardNumber(cardNumber);
+        cardInformation.setCreatedAt(LocalDateTime.now());
+        cardInformationRepository.save(cardInformation);
     }
 
     private ResponseDto getResponseError(HttpClientErrorException ex) throws JsonProcessingException {

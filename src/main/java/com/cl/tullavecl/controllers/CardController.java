@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
@@ -24,8 +25,8 @@ public class CardController {
      * @throws IOException
      */
     @GetMapping("/card/information")
-    public ResponseEntity<ResponseDto> getCardInformation(@RequestParam String cardNumber) throws IOException {
-        ResponseDto cardInformation = cardService.getCardInformation(cardNumber);
+    public ResponseEntity<ResponseDto> getCardInformation(@RequestParam String cardNumber, HttpServletRequest request) throws IOException {
+        ResponseDto cardInformation = cardService.getCardInformation(cardNumber, request);
         if (cardInformation.getMessage().equals("error")) {
             return new ResponseEntity<>(cardInformation, HttpStatus.BAD_REQUEST);
         } else {
