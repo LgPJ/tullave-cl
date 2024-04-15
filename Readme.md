@@ -9,27 +9,33 @@ Este proyecto utiliza Docker para su ejecución. Asegúrate de tener Docker inst
    ```sh
    git clone https://github.com/LgPJ/tullave-cl.git
    
-**Navega al directorio del proyecto:**
+2. Navega al directorio del proyecto:
 
-cd tullave-cl
+   ```sh
+   cd tullave-cl
 
-**Construye el proyecto con Maven:**
+3. Construye el proyecto con Maven:
 
-mvn clean package
+   ```sh
+    mvn clean package
 
-**Construye las imágenes de Docker:**
+4. Construye las imágenes de Docker
 
-docker-compose build
+   ```sh
+   docker-compose build
 
-**Levanta los contenedores:**
+5. Levanta los contenedores:
 
-docker-compose up
+   ```sh
+   docker-compose up
 
-**Accede al proyecto en tu navegador:**
+6. Accede al proyecto en tu navegador:
 
-http://localhost:8080/api/cl/card/information?cardNumber=tu-numero-de-tarjeta
+   ```sh
+    http://localhost:8080/api/cl/card/information?cardNumber=tu-numero-de-tarjeta
 
 
-**Detén los contenedores cuando hayas terminado:**
+7. Detén los contenedores cuando hayas terminado:
 
-docker-compose down
+   ```sh
+    docker-compose down
