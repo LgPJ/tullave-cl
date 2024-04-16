@@ -6,6 +6,7 @@ public class ResponseCardDto {
 
     private String userName;
     private String userLastName;
+    private String profile;
     private BigDecimal virtualBalance;
     private BigDecimal balance;
 
@@ -40,5 +41,13 @@ public class ResponseCardDto {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 }

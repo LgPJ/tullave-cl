@@ -50,6 +50,7 @@ public class CardService {
                 responseCardDto.setUserName("");
                 responseCardDto.setUserLastName("");
                 responseCardDto.setBalance(cardBalance.getBalance());
+                responseCardDto.setProfile("");
                 responseCardDto.setVirtualBalance(cardBalance.getVirtualBalance());
                 ResponseDto responseDto = new ResponseDto();
                 responseDto.setData(responseCardDto);
@@ -73,6 +74,7 @@ public class CardService {
         responseCardDto.setUserLastName(response.getBody().getUserLastName());
         responseCardDto.setUserName(response.getBody().getUserName());
         responseCardDto.setBalance(cardBalance.getBalance());
+        responseCardDto.setProfile(response.getBody().getProfile());
         responseCardDto.setVirtualBalance(cardBalance.getVirtualBalance());
         ResponseDto responseDto = new ResponseDto();
         responseDto.setData(responseCardDto);
